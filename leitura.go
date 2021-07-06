@@ -1,16 +1,11 @@
 package siloms
 
-import (
-	"bytes"
-	"encoding/csv"
-	"fmt"
-	"io"
-	"log"
-)
-
+// Teste função de teste
 func Teste() {
 	fmt.Println("teste siloms")
 }
+
+/*
 
 // LerArqRequisicao extrai as requisições de um arquivo no formato CSV
 func LerArqRequisicao(arq string) []Requisicao {
@@ -35,3 +30,4 @@ func LerArqRequisicao(arq string) []Requisicao {
 
 	return nil
 }
+*/

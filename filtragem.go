@@ -1,11 +1,7 @@
+// Package siloms inclui funções para filtragem de requisições
 package siloms
 
 import (
-	"bytes"
-	"encoding/csv"
-	"fmt"
-	"io"
-	"log"
 	"strings"
 )
 
