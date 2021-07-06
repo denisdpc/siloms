@@ -1,5 +1,7 @@
 package siloms
 
+import "fmt"
+
 // Teste função de teste
 func Teste() {
 	fmt.Println("teste siloms teste")
