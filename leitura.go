@@ -2,7 +2,7 @@ package siloms
 
 // Teste função de teste
 func Teste() {
-	fmt.Println("teste siloms")
+	fmt.Println("teste siloms total")
 }
 
 /*
