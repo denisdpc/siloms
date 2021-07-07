@@ -8,7 +8,7 @@ func Teste2() {
 
 // TestePrint função de teste
 func Teste() {
-	fmt.Println("teste siloms teste")
+	fmt.Println("siloms TESTE")
 }
 
 /*
