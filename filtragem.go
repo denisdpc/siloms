@@ -2,16 +2,26 @@
 package siloms
 
 import (
+	_ "fmt"
 	"strings"
 )
 
-// IsReqNacionalizado verifica se a requisição é de material nacionalizado
-func IsReqNacionalizado(r Requisicao) bool {
+// IsDeserto verifica se a requisição apresenta status de item deserto
+func IsDeserto(r Requisicao) bool {
+	return r.status == "Item Deserto"
+}
+
+func IsMapa(r Requisicao) bool {
+	return r.status == "Mapa aprovado" || r.status == "Mapa gerado"
+}
+
+// IsNacionalizado verifica se a requisição é de material nacionalizado
+func IsNacionalizado(r Requisicao) bool {
 	return strings.HasPrefix(r.partNumber, "DCN")
 }
 
-// IsReqPendente verifica se a requisição não atingiu o status de mapa
-func IsReqPendente(r Requisicao) bool {
+// IsPreMapa verifica se a requisição não atingiu o status de mapa
+func IsPreMapa(r Requisicao) bool {
 
 	return false
 }
@@ -22,6 +32,13 @@ func IsReqAtendida(r Requisicao) bool {
 }
 
 // FiltrarRequisicoes extrai requisições que atende a determinado requisito
-func FiltrarRequisicoes(v func(Requisicao) bool) []Requisicao {
-	return nil
+func FiltrarRequisicoes(reqs []Requisicao, f func(Requisicao) bool) []Requisicao {
+	var requisicoes []Requisicao
+	for _, r := range reqs {
+		if f(r) {
+			requisicoes = append(requisicoes, r)
+		}
+
+	}
+	return requisicoes
 }

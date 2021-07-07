@@ -2,7 +2,7 @@ package siloms
 
 import (
 	"bufio"
-	"fmt"
+	_ "fmt"
 	"log"
 	"os"
 	"strings"
@@ -16,11 +16,6 @@ type Requisicao struct {
 	numero     string
 	partNumber string
 	status     string
-}
-
-// Teste função de teste
-func Teste() {
-	fmt.Println("siloms TESTE2")
 }
 
 // LerArqRequisicao extrai as requisições de um arquivo no formato CSV
