@@ -5,13 +5,6 @@ import (
 	"strings"
 )
 
-// Requisicao contempla campos de interesse da requisicao
-type Requisicao struct {
-	numero     string
-	partNumber string
-	status     string
-}
-
 // IsReqNacionalizado verifica se a requisição é de material nacionalizado
 func IsReqNacionalizado(r Requisicao) bool {
 	return strings.HasPrefix(r.partNumber, "DCN")

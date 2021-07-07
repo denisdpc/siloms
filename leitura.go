@@ -1,39 +1,54 @@
 package siloms
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"log"
+	"os"
+	"strings"
 
-func Teste2() {
-	fmt.Println("teste 2")
+	"golang.org/x/text/encoding/charmap"
+	"golang.org/x/text/transform"
+)
+
+// Requisicao contempla campos de interesse da requisicao
+type Requisicao struct {
+	numero     string
+	partNumber string
+	status     string
 }
 
-// TestePrint função de teste
+// Teste função de teste
 func Teste() {
-	fmt.Println("siloms TESTE")
+	fmt.Println("siloms TESTE2")
 }
-
-/*
 
 // LerArqRequisicao extrai as requisições de um arquivo no formato CSV
 func LerArqRequisicao(arq string) []Requisicao {
-
-	reader := csv.NewReader(bytes.NewBuffer(arq))
-	_, err := reader.Read() // skip first line
+	file, err := os.Open(arq)
 	if err != nil {
-		if err != io.EOF {
-			log.Fatalln(err)
-		}
+		log.Fatal(err)
 	}
-	for {
-		line, err := reader.Read()
-		if err != nil {
-			if err == io.EOF {
-				fmt.Println(err)
-				break
-			}
-		}
-		fmt.Println(line)
+	defer file.Close()
+
+	dec := transform.NewReader(file, charmap.ISO8859_1.NewDecoder())
+	scanner := bufio.NewScanner(dec)
+	scanner.Scan()
+	scanner.Scan()
+	scanner.Scan()
+
+	var requisicoes []Requisicao
+
+	for scanner.Scan() {
+		linha := scanner.Text()
+		col := strings.Split(linha, ";")
+		req := Requisicao{
+			numero:     strings.TrimSpace(col[1]),
+			partNumber: strings.TrimSpace(col[4]),
+			status:     strings.TrimSpace(col[17])}
+
+		requisicoes = append(requisicoes, req)
 	}
 
-	return nil
+	return requisicoes
 }
-*/
