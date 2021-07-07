@@ -2,7 +2,6 @@ package siloms
 
 import (
 	"bufio"
-	_ "fmt"
 	"log"
 	"os"
 	"strings"
@@ -10,13 +9,6 @@ import (
 	"golang.org/x/text/encoding/charmap"
 	"golang.org/x/text/transform"
 )
-
-// Requisicao contempla campos de interesse da requisicao
-type Requisicao struct {
-	numero     string
-	partNumber string
-	status     string
-}
 
 // LerArqRequisicao extrai as requisições de um arquivo no formato CSV
 func LerArqRequisicao(arq string) []Requisicao {

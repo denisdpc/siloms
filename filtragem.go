@@ -6,18 +6,42 @@ import (
 	"strings"
 )
 
+var statusAquisicaoPendente = map[string]bool{
+	"Anulada":                  false,
+	"Cancelada":                false,
+	"Item Deserto":             true,
+	"Suspensa temporariamente": true,
+	"Aguardando validação":     true,
+	"Validada":                 true,
+	"Análise do Pedido":        true,
+	"Empenhada":                false,
+}
+
 // IsDeserto verifica se a requisição apresenta status de item deserto
 func IsDeserto(r Requisicao) bool {
 	return r.status == "Item Deserto"
 }
 
+//IsMapa verifica se a requisição está em mapa gerado ou aprovado
 func IsMapa(r Requisicao) bool {
-	return r.status == "Mapa aprovado" || r.status == "Mapa gerado"
+	return r.status == "Mapa Gerado" || r.status == "Mapa Aprovado"
 }
 
 // IsNacionalizado verifica se a requisição é de material nacionalizado
 func IsNacionalizado(r Requisicao) bool {
 	return strings.HasPrefix(r.partNumber, "DCN")
+}
+
+// IsAquisicaoPendente verifica necessidade de ação interna para aquisição
+func IsAquisicaoPendente(r Requisicao) bool {
+	return statusAquisicaoPendente[r.status]
+	/*
+		var status map[string]bool = {
+			'a': false
+		}
+		return status['a']
+	*/
+	return false
 }
 
 // IsPreMapa verifica se a requisição não atingiu o status de mapa
