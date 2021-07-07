@@ -2,6 +2,10 @@ package siloms
 
 import "fmt"
 
+func Teste2() {
+	fmt.Println("teste 2")
+}
+
 // TestePrint função de teste
 func Teste() {
 	fmt.Println("teste siloms teste")
