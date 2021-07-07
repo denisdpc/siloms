@@ -29,13 +29,44 @@ func LerArqRequisicao(arq string) []Requisicao {
 	for scanner.Scan() {
 		linha := scanner.Text()
 		col := strings.Split(linha, ";")
+		numReq := strings.TrimSpace(col[1])
+		partNumber := strings.TrimSpace(col[4])
+
+		if !isFromParque(numReq) {
+			continue
+		}
+
+		if !isNacionalizado(partNumber) {
+			continue
+		}
+
 		req := Requisicao{
-			numero:     strings.TrimSpace(col[1]),
-			partNumber: strings.TrimSpace(col[4]),
+			numero:     numReq,
+			partNumber: partNumber,
 			status:     strings.TrimSpace(col[17])}
 
 		requisicoes = append(requisicoes, req)
+
 	}
 
 	return requisicoes
+}
+
+// isFromParque verifica se a requisição foi emitida por algum Parque de Material
+func isFromParque(numReq string) bool {
+	return strings.HasPrefix(numReq, "GL") ||
+		strings.HasPrefix(numReq, "LS") ||
+		strings.HasPrefix(numReq, "SP") ||
+		strings.HasPrefix(numReq, "PB")
+}
+
+// isNacionalizado verifica se a requisição é de item nacionalizado
+func isNacionalizado(partNumber string) bool {
+	return strings.HasPrefix(partNumber, "DCN")
+}
+
+// TODO
+// isExtraSistema verifica se a requisição é extra sistema
+func isExtraSistema(es string) bool {
+	return es == "Sim"
 }
