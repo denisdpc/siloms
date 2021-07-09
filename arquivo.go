@@ -41,7 +41,10 @@ func LerArqRequisicao(arq string) []Requisicao {
 			continue
 		}
 
-		dataPlano, _ := time.Parse("02/01/2006", strings.TrimSpace(col[15][:10]))
+		dataPlano, err := time.Parse("02/01/2006", strings.TrimSpace(col[15][:10]))
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		req := Requisicao{
 			Numero:     numReq,
