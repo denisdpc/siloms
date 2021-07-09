@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"time"
 
 	"golang.org/x/text/encoding/charmap"
 	"golang.org/x/text/transform"
@@ -40,10 +41,14 @@ func LerArqRequisicao(arq string) []Requisicao {
 			continue
 		}
 
+		dataPlano, _ := time.Parse("02/01/2006", strings.TrimSpace(col[15][:10]))
+
 		req := Requisicao{
-			numero:     numReq,
-			partNumber: partNumber,
-			status:     strings.TrimSpace(col[17])}
+			Numero:     numReq,
+			PartNumber: partNumber,
+			Status:     strings.TrimSpace(col[17]),
+			DataPlano:  dataPlano,
+		}
 
 		requisicoes = append(requisicoes, req)
 

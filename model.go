@@ -1,8 +1,11 @@
 package siloms
 
+import "time"
+
 // Requisicao contempla campos de interesse da requisicao
 type Requisicao struct {
-	numero     string
-	partNumber string
-	status     string
+	Numero     string
+	PartNumber string
+	Status     string
+	DataPlano  time.Time
 }
