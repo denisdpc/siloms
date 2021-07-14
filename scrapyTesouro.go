@@ -9,12 +9,10 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-
-	_ "regexp"
-	_ "strings"
 )
 
-func ExtrairTesouro(p Parametro) float64 {
+// ExtrairTaxaTesouro obtém a taxa de retorno do tesouro pré-fixado com vencimento mais próximo
+func ExtrairTaxaTesouro() float64 {
 	url := "https://www.tesourodireto.com.br/json/br/com/b3/tesourodireto/service/api/treasurybondsinfo.json"
 	transCfg := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, // ignore expired SSL certificates
@@ -37,29 +35,27 @@ func ExtrairTesouro(p Parametro) float64 {
 		os.Exit(1)
 	}
 
-	TrsrBondMkt(jsonData)
-
-	return 0.7
+	return trsrBondMkt(jsonData)
 }
 
-func TrsrBondMkt(jsonData []byte) {
-	type Master struct {
+func trsrBondMkt(jsonData []byte) float64 {
+	type estrutura struct {
 		Response struct {
 			TrsrBdTradgList []struct {
 				TrsrBd struct {
 					Nm              string  `json:"nm"`
-					AnulInvstmtRate float32 `json:"anulInvstmtRate"`
+					AnulInvstmtRate float64 `json:"anulInvstmtRate"`
 				} `json:"TrsrBd"`
 			} `json:"TrsrBdTradgList"`
 		} `json:"response"`
 	}
-	var m Master
-	json.Unmarshal(jsonData, &m)
+	var e estrutura
+	json.Unmarshal(jsonData, &e)
 
 	var prefixado string
-	var taxaMin float32
+	var taxaMin float64
 
-	for _, v := range m.Response.TrsrBdTradgList {
+	for _, v := range e.Response.TrsrBdTradgList {
 		titulo, taxa := v.TrsrBd.Nm, v.TrsrBd.AnulInvstmtRate
 		if strings.HasPrefix(titulo, "Tesouro Prefixado 20") && taxa > 0 {
 			prefixado = titulo
@@ -68,5 +64,5 @@ func TrsrBondMkt(jsonData []byte) {
 
 	}
 	fmt.Println(prefixado, taxaMin)
-	//fmt.Println(m.Response.TrsrBdTradgList[0])
+	return taxaMin
 }
