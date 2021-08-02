@@ -12,9 +12,9 @@ import (
 // https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/aplicacao#!/recursos
 // https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='06-10-2020'&$top=100&$format=json&$select=cotacaoVenda
 
-// ExtrairCotacao fator de cotação, data inicial e data final
+// ExtrairFatorCotacao fator de cotação, data inicial e data final
 // Há datas que não contemplam cotação, sendo pesquisadas datas anteriores
-// As datas efetivamente utilizadas na cotação são fornecidas
+// até que seja possível extrair a cotação, data inicial e final de amostragem
 func ExtrairFatorCotacao(p *Parametro) (float64, time.Time, time.Time) {
 	cotacaoInicial, dataInicial := lerCotacaoDataValida(p.DataInicial)
 	cotacaoFinal, dataFinal := lerCotacaoDataValida(p.DataFinal)
@@ -22,6 +22,7 @@ func ExtrairFatorCotacao(p *Parametro) (float64, time.Time, time.Time) {
 	return fator, dataInicial, dataFinal
 }
 
+// lerCotacaoDataValida obtém uma cotação válida, retrocendo dia a dia
 func lerCotacaoDataValida(dataCotacao time.Time) (float64, time.Time) {
 	cotacao := -1.0
 	for cotacao == -1 {
@@ -33,6 +34,7 @@ func lerCotacaoDataValida(dataCotacao time.Time) (float64, time.Time) {
 	return cotacao, dataCotacao
 }
 
+// lerCotacaoData obtém cotação da data recebida
 func lerCotacaoData(date time.Time) float64 {
 	dt := date.Format("01-02-2006")
 	url := "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='%s'&$top=100&$format=json&$select=cotacaoVenda"
