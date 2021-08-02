@@ -6,27 +6,39 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
 )
 
 // https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/aplicacao#!/recursos
 // https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='06-10-2020'&$top=100&$format=json&$select=cotacaoVenda
 
-// ExtrairCotacao obtém a cotação
-func ExtrairFatorCotacao(p Parametro) float64 {
-	dtInicial := p.DataInicial.Format("01-02-2006") // MM-DD-AAAA
-	dtFinal := p.DataFinal.Format("01-02-2006")
+// ExtrairCotacao fator de cotação, data inicial e data final
+// Há datas que não contemplam cotação, sendo pesquisadas datas anteriores
+// As datas efetivamente utilizadas na cotação são fornecidas
+func ExtrairFatorCotacao(p *Parametro) (float64, time.Time, time.Time) {
+	cotacaoInicial, dataInicial := lerCotacaoDataValida(p.DataInicial)
+	cotacaoFinal, dataFinal := lerCotacaoDataValida(p.DataFinal)
+	fator := cotacaoFinal / cotacaoInicial
+	return fator, dataInicial, dataFinal
+}
 
+func lerCotacaoDataValida(dataCotacao time.Time) (float64, time.Time) {
+	cotacao := -1.0
+	for cotacao == -1 {
+		cotacao = lerCotacaoData(dataCotacao)
+		if cotacao == -1 {
+			dataCotacao = dataCotacao.Add(-time.Hour * 24)
+		}
+	}
+	return cotacao, dataCotacao
+}
+
+func lerCotacaoData(date time.Time) float64 {
+	dt := date.Format("01-02-2006")
 	url := "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='%s'&$top=100&$format=json&$select=cotacaoVenda"
-	urlInicial := fmt.Sprintf(url, dtInicial)
-	urlFinal := fmt.Sprintf(url, dtFinal)
-
-	var fator float64
-	jsonCotacao := extrairJSON(urlFinal)
-	fator = extrairCotacaoFromJSON(jsonCotacao)
-	jsonCotacao = extrairJSON(urlInicial)
-	fator /= extrairCotacaoFromJSON(jsonCotacao)
-
-	return fator
+	urlDate := fmt.Sprintf(url, dt)
+	jsonCotacao := extrairJSON(urlDate)
+	return extrairCotacaoFromJSON(jsonCotacao)
 }
 
 type estrutura struct {
@@ -38,6 +50,9 @@ type estrutura struct {
 func extrairCotacaoFromJSON(jsonData []byte) float64 {
 	var e estrutura
 	json.Unmarshal(jsonData, &e)
+	if len(e.Value) == 0 {
+		return -1
+	}
 	return e.Value[0].CotacaoVenda
 }
 
