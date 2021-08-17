@@ -9,11 +9,9 @@ import (
 	"strings"
 )
 
-func ExtrairFatorIGPM(p Parametro) float64 {
+func ExtrairFatorIGPM(p *Parametro) float64 {
 	dtInicial := p.DataInicial.Format("01/2006")
 	dtFinal := p.DataFinal.Format("01/2006")
-
-	fmt.Println(dtInicial, dtFinal)
 
 	url := "https://www3.bcb.gov.br/CALCIDADAO/publico/corrigirPorIndice.do?method=corrigirPorIndice"
 	pesquisa := fmt.Sprintf("aba=1&selIndice=28655IGP-M&dataInicial=%s&dataFinal=%s&valorCorrecao=1", dtInicial, dtFinal)

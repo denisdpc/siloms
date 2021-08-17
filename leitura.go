@@ -32,12 +32,17 @@ func LerArqRequisicao(arq string) []Requisicao {
 		col := strings.Split(linha, ";")
 		numReq := strings.TrimSpace(col[1])
 		partNumber := strings.TrimSpace(col[4])
+		tipoPlano := strings.TrimSpace(col[14])
 
 		if !isFromParque(numReq) {
 			continue
 		}
 
 		if !isNacionalizado(partNumber) {
+			continue
+		}
+
+		if !isMaterial(tipoPlano) { // desconsidera extra-sistema, publicação
 			continue
 		}
 
@@ -73,8 +78,7 @@ func isNacionalizado(partNumber string) bool {
 	return strings.HasPrefix(partNumber, "DCN")
 }
 
-// TODO
-// isExtraSistema verifica se a requisição é extra sistema
-func isExtraSistema(es string) bool {
-	return es == "Sim"
+// isMaterial verifica se a requisição não é extra-sistema, publicação
+func isMaterial(tipoPlano string) bool {
+	return tipoPlano == "Material"
 }

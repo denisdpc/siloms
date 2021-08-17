@@ -14,14 +14,12 @@ var statusAquisicaoPendente = map[string]bool{
 
 // IsAquisicaoPendente verifica necessidade de ação interna para aquisição
 func IsAquisicaoPendente(r Requisicao) bool {
-	return statusAquisicaoPendente[r.Status]
-	return false
+	return statusAquisicaoPendente[r.Status]	
 }
 
 // IsReqAtendida verifica se a requisição atingiu o status de mapa e posteriores
 func IsReqAtendida(r Requisicao) bool {
-	return !statusAquisicaoPendente[r.Status]
-	return false
+	return !statusAquisicaoPendente[r.Status]	
 }
 
 // IsDeserto verifica se a requisição apresenta status de item deserto
@@ -34,6 +32,7 @@ func IsMapa(r Requisicao) bool {
 	return r.Status == "Mapa Gerado" || r.Status == "Mapa Aprovado"
 }
 
+// TODO: implementar
 // IsPreMapa verifica se a requisição não atingiu o status de mapa
 func IsPreMapa(r Requisicao) bool {
 

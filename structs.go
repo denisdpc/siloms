@@ -14,4 +14,6 @@ type Requisicao struct {
 	PartNumber string
 	Status     string
 	DataPlano  time.Time
+	Qtd        int
+	ValorUnit  float64
 }

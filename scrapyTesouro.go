@@ -12,7 +12,7 @@ import (
 )
 
 // ExtrairTaxaTesouro obtém a taxa de retorno do tesouro pré-fixado com vencimento mais próximo
-func ExtrairTaxaTesouro() float64 {
+func ExtrairTaxaTesouro() (float64, string) {
 	url := "https://www.tesourodireto.com.br/json/br/com/b3/tesourodireto/service/api/treasurybondsinfo.json"
 	transCfg := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, // ignore expired SSL certificates
@@ -38,7 +38,7 @@ func ExtrairTaxaTesouro() float64 {
 	return trsrBondMkt(jsonData)
 }
 
-func trsrBondMkt(jsonData []byte) float64 {
+func trsrBondMkt(jsonData []byte) (float64, string) {
 	type estrutura struct {
 		Response struct {
 			TrsrBdTradgList []struct {
@@ -63,6 +63,5 @@ func trsrBondMkt(jsonData []byte) float64 {
 		}
 
 	}
-	fmt.Println(prefixado, taxaMin)
-	return taxaMin
+	return taxaMin, prefixado
 }
