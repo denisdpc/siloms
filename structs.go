@@ -10,10 +10,12 @@ type Parametro struct {
 
 // Requisicao contempla campos de interesse da requisicao
 type Requisicao struct {
-	Numero     string
-	PartNumber string
-	Status     string
-	DataPlano  time.Time
-	Qtd        int
-	ValorUnit  float64
+	Numero       string
+	PartNumber   string
+	Nomenclatura string
+	Status       string
+	DataPlano    time.Time
+	Qtd          int
+	Unidade      string
+	ValorUnit    float64
 }

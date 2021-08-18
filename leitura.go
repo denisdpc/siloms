@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -51,15 +52,26 @@ func LerArqRequisicao(arq string) []Requisicao {
 			log.Fatal(err)
 		}
 
+		nomenclatura := strings.TrimSpace(col[7])
+		status := strings.TrimSpace(col[17])
+		valorUnitStr := strings.TrimSpace(col[28])
+		valorUnitStr = strings.Replace(valorUnitStr, ",", ".", 1)
+		valorUnit, _ := strconv.ParseFloat(valorUnitStr, 64)
+		qtd, _ := strconv.Atoi(strings.TrimSpace(col[30]))
+		unidade := strings.TrimSpace(col[31])
+
 		req := Requisicao{
-			Numero:     numReq,
-			PartNumber: partNumber,
-			Status:     strings.TrimSpace(col[17]),
-			DataPlano:  dataPlano,
+			Numero:       numReq,
+			PartNumber:   partNumber,
+			Nomenclatura: nomenclatura,
+			Status:       status,
+			DataPlano:    dataPlano,
+			Qtd:          qtd,
+			Unidade:      unidade,
+			ValorUnit:    valorUnit,
 		}
 
 		requisicoes = append(requisicoes, req)
-
 	}
 
 	return requisicoes
