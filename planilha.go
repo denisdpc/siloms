@@ -3,9 +3,12 @@ package siloms
 
 import (
 	"fmt"
-	"github.com/360EntSecGroup-Skylar/excelize"
+	"log"
+	"os"
 	"strconv"
 	"time"
+
+	"github.com/360EntSecGroup-Skylar/excelize"
 )
 
 // Planilhar gerar planilha a partir de parâmetros de entrada
@@ -21,7 +24,16 @@ func Planilhar(caminho string, dataPesq time.Time,
 	setarValores(p, dataPesq, reqRef, reqs, pTDPre, pCot, pIGPM, pEsc)
 	setarFormulas(p)
 
-	if err := p.SaveAs(caminho + "teste.xlsx"); err != nil {
+	_, err := os.Stat(caminho + "ref")
+	if os.IsNotExist(err) {
+		err = os.Mkdir(caminho+"ref", 0744)
+		if err != nil {
+			log.Println("não foi possível criar diretório de armazenamento das planilhas de referência")
+			return
+		}
+	}
+
+	if err := p.SaveAs(caminho + "ref/" + reqRef.PartNumber + ".xlsx"); err != nil {
 		fmt.Println("ERRO: ", err)
 	}
 
