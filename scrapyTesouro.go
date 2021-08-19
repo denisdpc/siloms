@@ -63,5 +63,5 @@ func trsrBondMkt(jsonData []byte) (float64, string) {
 		}
 
 	}
-	return taxaMin, prefixado
+	return 0.01 * taxaMin, prefixado
 }
