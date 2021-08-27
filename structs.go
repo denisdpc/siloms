@@ -19,3 +19,11 @@ type Requisicao struct {
 	Unidade      string
 	ValorUnit    float64
 }
+
+// RequisicaoAtualRef relação de requisições atuais e de
+// referência para um dado part number
+type RequisicaoPnRefToAtual struct {
+	PartNumber string
+	ReqsRef    []Requisicao
+	ReqsAtual  []Requisicao
+}

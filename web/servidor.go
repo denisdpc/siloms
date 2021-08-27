@@ -6,6 +6,7 @@ package web
 
 import (
 	"fmt"
+	"github.com/denisdpc/siloms"
 	"html/template"
 	"io/ioutil"
 	"net/http"
@@ -26,20 +27,37 @@ func handler(w http.ResponseWriter, r *http.Request) {
 func uploadFile(w http.ResponseWriter, r *http.Request) {
 	r.ParseMultipartForm(10 << 20) // maximum upload of 10 MB files
 
-	criarArquivo("fileAtual", r)
-	criarArquivo("fileRef", r)
+	fileAtual := criarArquivo("fileAtual", r)
+	fileRef := criarArquivo("fileRef", r)
 
-	// return that we have successfully uploaded our file!
-	fmt.Fprintf(w, "Successfully Uploaded File\n")
+	mapaPNtoReqsRef := siloms.MapaPNtoRequisicoes(fileRef)
+	mapaPNtoReqsAtual := siloms.MapaPNtoRequisicoes(fileAtual)
+
+	var reqsPnRefToAtual []siloms.RequisicaoPnRefToAtual
+	for partNumber, reqs := range mapaPNtoReqsRef {
+		reqRefAtual := siloms.RequisicaoPnRefToAtual{
+			PartNumber: partNumber,
+			ReqsRef:    reqs,
+			ReqsAtual:  mapaPNtoReqsAtual[partNumber]}
+		reqsPnRefToAtual = append(reqsPnRefToAtual, reqRefAtual)
+	}
+
+	fmt.Println(reqsPnRefToAtual[0])
+	tmpl := template.Must(template.ParseFiles("../siloms/web/correspondencia.html"))
+	tmpl.Execute(w, nil)
+
+	// TODO: direcionar para página de correspondencia
+	// com as correspondentes referências para escolha da mais compatível
+
+	//http.Redirect(w, r, "/", http.StatusFound)
 
 }
 
-func criarArquivo(arqNome string, r *http.Request) {
+func criarArquivo(arqNome string, r *http.Request) string {
 	file, _, err := r.FormFile(arqNome)
 	if err != nil {
 		fmt.Println("erro ao recuperar o arquivo " + arqNome)
-		fmt.Println(err)
-		return
+		panic(err)
 	}
 	defer file.Close()
 
@@ -54,4 +72,6 @@ func criarArquivo(arqNome string, r *http.Request) {
 		fmt.Println(err)
 	}
 	tempFile.Write(fileBytes)
+
+	return tempFile.Name()
 }
