@@ -42,9 +42,33 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 		reqsPnRefToAtual = append(reqsPnRefToAtual, reqRefAtual)
 	}
 
-	fmt.Println(reqsPnRefToAtual[0])
+	type Data struct {
+		Lista []siloms.RequisicaoPnRefToAtual
+	}
+	data := Data{Lista: reqsPnRefToAtual}
+
+	// type Todo struct {
+	// 	Title string
+	// 	Done  bool
+	// }
+
+	// type TodoPageData struct {
+	// 	PageTitle string
+	// 	Todos     []Todo
+	// }
+
+	// data := TodoPageData{
+	// 	PageTitle: "My TODO list",
+	// 	Todos: []Todo{
+	// 		{Title: "Task 1", Done: false},
+	// 		{Title: "Task 2", Done: true},
+	// 		{Title: "Task 3", Done: true},
+	// 	},
+	// }
+
 	tmpl := template.Must(template.ParseFiles("../siloms/web/correspondencia.html"))
-	tmpl.Execute(w, nil)
+	tmpl.Execute(w, data)
+	//tmpl.Execute(w, nil)
 
 	// TODO: direcionar para página de correspondencia
 	// com as correspondentes referências para escolha da mais compatível

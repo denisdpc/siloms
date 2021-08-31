@@ -1,5 +1,32 @@
-<html>
-CORRESPONDENCIA
+<h1>
+<ul>
+{{range .Lista}}
+    <li>
+        {{.PartNumber}}
+    </li>
+{{end}}
 
-</html>
+</ul>
 
+
+</h1>
+
+<!-- <h1>
+<ul>
+    {{range .Todos}}
+        {{.Title}}
+        
+    {{end}}
+</ul>
+</h1> -->
+
+<!-- <h1>{{.PageTitle}}</h1>
+<ul>
+    {{range .Todos}}
+        {{if .Done}}
+            <li class="done">{{.Title}}</li>
+        {{else}}
+            <li>{{.Title}}</li>
+        {{end}}
+    {{end}}
+</ul> -->
