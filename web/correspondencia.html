@@ -1,15 +1,40 @@
-<h1>
+<html>
 <ul>
-{{range .Lista}}
-    <li>
-        {{.PartNumber}}
-    </li>
-{{end}}
+    {{range .Lista}}
+        <li>
+            {{.PartNumber}}<br>            
+            <table>
+                <tr>
+                    <td>
+                        <table border=1>
+                            <th>Numero</th><th>Qtd</th><th>Unidade</th><th>Valor Unit</th>
+                            {{range .ReqsRef}}
+                            <tr>
+                                <td>{{.Numero}}</td><td>{{.Qtd}}</td><td>{{.Unidade}}</td><td>{{.ValorUnit}}</td>
+                            </tr>
+                            {{end}}
+                        </table>
+                    </td>
+                    <td>
+                        <table border=1>
+                            <th>Qtd</th><th>Unidade</th>
+                            {{range .ReqsAtual}}
+                            <tr>
+                                <td>{{.Numero}}</td><td>{{.Qtd}}</td><td>{{.Unidade}}</td>
+                            </tr>
+                            {{end}}
+                        </table>
+                    </td>
+                    
+                </tr>
 
+            </table>
+            
+        </li>
+    {{end}}
 </ul>
+</html>
 
-
-</h1>
 
 <!-- <h1>
 <ul>
