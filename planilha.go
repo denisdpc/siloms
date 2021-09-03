@@ -11,7 +11,7 @@ import (
 	"github.com/360EntSecGroup-Skylar/excelize"
 )
 
-// Planilhar gerar planilha a partir de parâmetros de entrada
+// Planilhar gerar planilha a partir de parâmetros de entrada para determinado PN
 func Planilhar(caminho string, dataPesq time.Time,
 	reqRef Requisicao, reqs []Requisicao,
 	pTDPre, pCot, pIGPM, pEsc float64) {

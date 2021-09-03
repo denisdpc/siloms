@@ -1,57 +1,46 @@
 <html>
-<ul>
-    {{range .Lista}}
-        <li>
-            {{.PartNumber}}<br>            
-            <table>
-                <tr>
-                    <td>
-                        <table border=1>
-                            <th>Numero</th><th>Qtd</th><th>Unidade</th><th>Valor Unit</th>
-                            {{range .ReqsRef}}
-                            <tr>
-                                <td>{{.Numero}}</td><td>{{.Qtd}}</td><td>{{.Unidade}}</td><td>{{.ValorUnit}}</td>
-                            </tr>
-                            {{end}}
-                        </table>
-                    </td>
-                    <td>
-                        <table border=1>
-                            <th>Qtd</th><th>Unidade</th>
-                            {{range .ReqsAtual}}
-                            <tr>
-                                <td>{{.Numero}}</td><td>{{.Qtd}}</td><td>{{.Unidade}}</td>
-                            </tr>
-                            {{end}}
-                        </table>
-                    </td>
-                    
-                </tr>
-
-            </table>
-            
-        </li>
-    {{end}}
-</ul>
+<head>
+    <style>
+        th,td {
+            padding: 15px
+        }
+    </style>
+</head>
+<body>
+    <form action="/planilhar" method="post">
+        <ul>
+        {{range .Lista}}
+            <li>
+                {{.PartNumber}}<br>            
+                <table>
+                    <tr>
+                        <td>
+                            <table border=1>
+                                <th></th></th><th>Ano</th><th>Numero</th><th>Qtd</th><th>Unidade</th><th>Valor Unit</th>
+                                {{range .ReqsRef}}
+                                <tr>
+                                    <td><input type="radio" name="{{.PartNumber}}" value="{{.Numero}}"></td>
+                                    <td>{{.FormatarAno}}</td><td>{{.Numero}}</td><td>{{.Qtd}}</td><td>{{.Unidade}}</td><td>{{.FormatarValor}}</td>
+                                </tr>
+                                {{end}}
+                            </table>
+                        </td>
+                        <td>
+                            <table border=1>
+                                <th>Requisição</th><th>Qtd</th><th>Unidade</th>
+                                {{range .ReqsAtual}}
+                                <tr>
+                                    <td>{{.Numero}}</td><td>{{.Qtd}}</td><td>{{.Unidade}}</td>
+                                </tr>
+                                {{end}}
+                            </table>
+                        </td>                    
+                    </tr>
+                </table>            
+            </li><br>
+        {{end}}    
+        </ul>
+        <input type="submit" />
+    </form>
+</body>
 </html>
-
-
-<!-- <h1>
-<ul>
-    {{range .Todos}}
-        {{.Title}}
-        
-    {{end}}
-</ul>
-</h1> -->
-
-<!-- <h1>{{.PageTitle}}</h1>
-<ul>
-    {{range .Todos}}
-        {{if .Done}}
-            <li class="done">{{.Title}}</li>
-        {{else}}
-            <li>{{.Title}}</li>
-        {{end}}
-    {{end}}
-</ul> -->

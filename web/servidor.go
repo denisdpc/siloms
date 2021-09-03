@@ -10,12 +10,14 @@ import (
 	"html/template"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
 // Servidor gerenciamento de requisições
 func Servidor() {
 	http.HandleFunc("/", handler)
 	http.HandleFunc("/upload", uploadFile)
+	http.HandleFunc("/planilhar", planilhar)
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -24,14 +26,53 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, nil)
 }
 
+// https://astaxie.gitbooks.io/build-web-application-with-golang/content/en/04.1.html
+// saida: reqRef e []Requisicao atuais
+func planilhar(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	for partNumber, numReqRef := range r.Form {
+		var reqRef siloms.Requisicao
+		var reqs []siloms.Requisicao
+
+		for _, req := range mapaPNtoReqsRef[partNumber] {
+			if req.Numero == numReqRef[0] {
+				reqs = mapaPNtoReqsAtual[partNumber]
+				reqRef = req
+
+				p := &siloms.Parametro{
+					DataInicial: req.DataPlano,
+					DataFinal:   time.Now().AddDate(0, -1, 0)}
+
+				pIGPM := siloms.ExtrairFatorIGPM(p)
+				p.DataFinal = time.Now()
+				pCot, _, _ := siloms.ExtrairFatorCotacao(p)
+				pTDPre, titulo := siloms.ExtrairTaxaTesouro()
+				caminho := "../csv/"
+				R := 0.05
+
+				siloms.Planilhar(caminho, time.Now(), reqRef, reqs, pTDPre, pCot, pIGPM, R)
+				fmt.Println(titulo)
+
+				break
+			}
+		}
+	}
+	// TODO: redirecionar para página que permite realizar o download dos arquivos
+}
+
+var mapaPNtoReqsRef map[string][]siloms.Requisicao
+var mapaPNtoReqsAtual map[string][]siloms.Requisicao
+
 func uploadFile(w http.ResponseWriter, r *http.Request) {
 	r.ParseMultipartForm(10 << 20) // maximum upload of 10 MB files
 
 	fileAtual := criarArquivo("fileAtual", r)
 	fileRef := criarArquivo("fileRef", r)
 
-	mapaPNtoReqsRef := siloms.MapaPNtoRequisicoes(fileRef)
-	mapaPNtoReqsAtual := siloms.MapaPNtoRequisicoes(fileAtual)
+	mapaPNtoReqsRef = siloms.MapaPNtoRequisicoes(fileRef)
+	mapaPNtoReqsAtual = siloms.MapaPNtoRequisicoes(fileAtual)
+	//mapaPNtoReqsRef := siloms.MapaPNtoRequisicoes(fileRef)
+	//mapaPNtoReqsAtual := siloms.MapaPNtoRequisicoes(fileAtual)
 
 	var reqsPnRefToAtual []siloms.RequisicaoPnRefToAtual
 	for partNumber, reqs := range mapaPNtoReqsRef {

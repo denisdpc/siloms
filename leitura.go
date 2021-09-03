@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"log"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -70,12 +71,23 @@ func MapaPNtoRequisicoes(arq string) map[string][]Requisicao {
 			Unidade:      unidade,
 			ValorUnit:    valorUnit,
 		}
-
 		mapaRequisicao[partNumber] = append(mapaRequisicao[partNumber], req)
 	}
+	ordenarPorDataPlano(mapaRequisicao)
+
 	return mapaRequisicao
 }
 
+// TODO: NÃO ESTÁ SENDO UTILIZADO. VERFICAR SE ESTÁ FUNCIONANDO
+func ordenarPorDataPlano(mapa map[string][]Requisicao) {
+	for _, reqs := range mapa {
+		sort.Slice(reqs, func(i, j int) bool {
+			return reqs[i].DataPlano.After(reqs[j].DataPlano)
+		})
+	}
+}
+
+// TODO: excluir esta função
 // LerArqRequisicao extrai as requisições de um arquivo no formato CSV
 func LerArqRequisicao(arq string) []Requisicao {
 	file, err := os.Open(arq)

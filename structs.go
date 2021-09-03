@@ -1,6 +1,10 @@
 package siloms
 
-import "time"
+import (
+	"strconv"
+	"strings"
+	"time"
+)
 
 // Parametro contempla os parâmetros para extração de dados
 type Parametro struct {
@@ -26,4 +30,16 @@ type RequisicaoPnRefToAtual struct {
 	PartNumber string
 	ReqsRef    []Requisicao
 	ReqsAtual  []Requisicao
+}
+
+// FormatarData retorna data no formato AAAA-MM-DD
+func (r Requisicao) FormatarAno() string {
+	return r.DataPlano.Format("2006")
+	//return r.DataPlano.Format("2006-01-02")
+}
+
+// FormatarValor converte ValorUnit para string e substitui . por ,
+func (r Requisicao) FormatarValor() string {
+	str := strconv.FormatFloat(r.ValorUnit, 'f', 2, 64)
+	return strings.Replace(str, ".", ",", 1)
 }
