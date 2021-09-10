@@ -18,6 +18,10 @@ func Servidor() {
 	http.HandleFunc("/", handler)
 	http.HandleFunc("/upload", uploadFile)
 	http.HandleFunc("/planilhar", planilhar)
+
+	fs := http.FileServer(http.Dir("../csv/ref"))
+	http.Handle("/static/", http.StripPrefix("/static", fs))
+
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -26,8 +30,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, nil)
 }
 
-// https://astaxie.gitbooks.io/build-web-application-with-golang/content/en/04.1.html
-// saida: reqRef e []Requisicao atuais
+// planilhar gera planilhas no diretório csv/ref
 func planilhar(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	for partNumber, numReqRef := range r.Form {
@@ -57,7 +60,12 @@ func planilhar(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
+
+	http.Redirect(w, r, "/static", 301)
+
 	// TODO: redirecionar para página que permite realizar o download dos arquivos
+	// https://learngolang.net/tutorials/linking-and-symlink-files-using-go/
+	// https://golangcode.com/download-a-file-from-a-url/
 }
 
 var mapaPNtoReqsRef map[string][]siloms.Requisicao
